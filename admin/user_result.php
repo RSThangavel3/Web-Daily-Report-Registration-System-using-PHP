@@ -1,7 +1,7 @@
 <?php
     require_once(dirname(__FILE__) . '/../config/config.php');
     require_once(dirname(__FILE__) . '/../function.php');
-
+try{
     session_start();
 
     if(!isset($_SESSION['USER']) || $_SESSION['USER']['auth_type'] != 1){
@@ -10,15 +10,24 @@
       }
 
     $user_id = $_REQUEST['id'];
-
+    
+    
+    if(!$user_id) {
+        throw new Exception('ユーザーIDが不正', 500);
+    }
     $pdo = connect_db();
 
     $arr = array();
     $target_date = date('Y-m-d');
-
+    
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-        $target_date = $_POST['target_date'];
+        if($_POST['target_date']){
+            $target_date = $_POST['target_date'];
+        }else{
+            $target_date = date('Y-m-d');
+        }
+
         $modal_start_time = $_POST['modal_start_time'];
         $modal_end_time = $_POST['modal_end_time'];
         $modal_break_time = $_POST['modal_break_time'];
@@ -91,12 +100,26 @@
     if(isset($_GET['m'])){
        $yyyymm = $_GET['m'];
        $day_count = date('t',strtotime($yyyymm));
+
+    if(count(explode('-',$yyyymm)) != 2) {
+        throw new Exception('日付の指定が不正', 500);
+    }
+
+    $check_date = new DateTime($yyyymm.'-01');
+    $start_date = new DateTime('first day of -11 month 00:00');
+    $end_date = new DateTime('first day of this month 00:00');
+
+    
+
+
     } else{
         $yyyymm = date('Y-m');
         $day_count = date('t');
     }
    
-   
+    var_dump($day_count);
+    var_dump($yyyymm);
+    exit;
 
     $sql = "SELECT date, id, start_time, end_time, break_time, comment FROM work WHERE user_id = :user_id AND DATE_FORMAT(date, '%Y-%m') = :date";
     $stmt = $pdo->prepare($sql);
@@ -104,6 +127,10 @@
     $stmt->bindValue(':date', $yyyymm, PDO::PARAM_STR);
     $stmt->execute();
     $work_list = $stmt->fetchAll(PDO::FETCH_UNIQUE);
+} catch(Exception $e){
+    header('Location: /error.php');
+    exit;
+}    
 ?>
 <!doctype html>
 <html lang="ja">

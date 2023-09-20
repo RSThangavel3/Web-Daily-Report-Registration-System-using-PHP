@@ -26,8 +26,6 @@
             $hour = (int)$timeComponents[0];
             $minute = (int)$timeComponents[1];
             return sprintf("%02d:%02d", $hour, $minute);
-        } else {
-            return "00:00";
-        }
+        } 
     }
 ?>

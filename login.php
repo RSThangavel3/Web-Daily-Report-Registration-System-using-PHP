@@ -1,56 +1,60 @@
 <?php
 require_once(dirname(__FILE__).'/config/config.php');
 require_once(dirname(__FILE__).'/function.php');
-
-  $err =array();
-session_start();
-if(isset($_SESSION['USER'])){
-  header('Location:/');
-  exit;
-}
-
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-  //入力値を取得
-  $user_no = $_POST['user_no'];
-  $password = $_POST['password'];
-
-  if(!$user_no){
-    $err['user_no'] = '社員番号を入力してください。';
-  } elseif (!preg_match('/^[0-9]+$/', $user_no)) {
-    $err['user_no'] = '社員番号を正しく入力してください。';
-  } elseif(mb_strlen($user_no, 'utf-8') > 20) {
-    $err['user_no'] = '社員番号が長すぎます。';
+try{
+    $err =array();
+  session_start();
+  if(isset($_SESSION['USER'])){
+    header('Location:/');
+    exit;
   }
 
+  if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    //入力値を取得
+    $user_no = $_POST['user_no'];
+    $password = $_POST['password'];
 
-  if(!$password){
-    $err['password'] = 'パスワードを入力してください。';
-  }
-
-  if(empty($err)){
-   $pdo = connect_db();
-
-    $sql = "SELECT id, user_no, name, auth_type FROM user WHERE user_no = :user_no AND password = :password LIMIT 1";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':user_no',$user_no, PDO::PARAM_STR);
-    $stmt->bindValue(':password',$password, PDO::PARAM_STR);
-    $stmt->execute();
-    $user = $stmt->fetch();
-
-    if($user){
-      $_SESSION['USER'] = $user;
-      header('Location:/index.php');
-      exit;
-      
-    } else {
-        $err['password'] = "認証に失敗しました";
+    if(!$user_no){
+      $err['user_no'] = '社員番号を入力してください。';
+    } elseif (!preg_match('/^[0-9]+$/', $user_no)) {
+      $err['user_no'] = '社員番号を正しく入力してください。';
+    } elseif(mb_strlen($user_no, 'utf-8') > 20) {
+      $err['user_no'] = '社員番号が長すぎます。';
     }
-  }
-}else{
 
-  $user_no = "";
-  $password = "";
-}
+
+    if(!$password){
+      $err['password'] = 'パスワードを入力してください。';
+    }
+
+    if(empty($err)){
+    $pdo = connect_db();
+
+      $sql = "SELECT id, user_no, name, auth_type FROM user WHERE user_no = :user_no AND password = :password LIMIT 1";
+      $stmt = $pdo->prepare($sql);
+      $stmt->bindValue(':user_no',$user_no, PDO::PARAM_STR);
+      $stmt->bindValue(':password',$password, PDO::PARAM_STR);
+      $stmt->execute();
+      $user = $stmt->fetch();
+
+      if($user){
+        $_SESSION['USER'] = $user;
+        header('Location:/index.php');
+        exit;
+        
+      } else {
+          $err['password'] = "認証に失敗しました";
+      }
+    }
+  }else{
+
+    $user_no = "";
+    $password = "";
+  }
+} catch(Exception $e){
+  header('Location: /error.php');
+  exit;
+}   
 ?>
 <!doctype html>
 <html lang="ja">
