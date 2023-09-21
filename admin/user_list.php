@@ -14,6 +14,15 @@ try{
     $sql = "SELECT * FROM user";
     $stmt = $pdo->query($sql);
     $user_list = $stmt->fetchAll();
+
+
+    if(isset($_GET['m'])){
+        $yyyymm = $_GET['m'];
+        $day_count = date('t',strtotime($yyyymm));
+     } else{
+         $yyyymm = date('Y-m');
+         $day_count = date('t');
+     }
 } catch(Exception $e){
     header('Location: /error.php');
     exit;
@@ -58,7 +67,7 @@ try{
                 <?php foreach ($user_list as $user): ?>
                 <tr>
                     <td scope="row"><?= $user['user_no']?></td>
-                    <td><a href="/admin/user_result.php?id=<?= $user['id']?>"><?= $user['name']?></a></td>
+                    <td><a href="/admin/user_result.php?m=<?= $yyyymm ?>&id=<?= $user['id']?>"><?= $user['name']?></a></td>
                     <td scope="row"><?php if($user['auth_type']== 1) echo '管理者';?></td>
                 </tr>
                 <?php endforeach; ?>

@@ -63,8 +63,6 @@ try{
             $stmt->bindValue(':date',$target_date, PDO::PARAM_STR);
             $stmt->execute();        
             $work = $stmt->fetch();
-            // print_r($work);
-            // exit;
 
             if($work) {
                 $sql = "UPDATE work SET start_time = :start_time, end_time = :end_time, break_time = :break_time, comment = :comment WHERE id = :id";
@@ -87,8 +85,6 @@ try{
                 $stmt->bindValue(':comment',$modal_comment,PDO::PARAM_STR);
                 $stmt->execute();
                 $work = $stmt->fetch();
-                // print_r($stmt);
-                // exit;
             }
         }    
     } else {
@@ -109,17 +105,18 @@ try{
     $start_date = new DateTime('first day of -11 month 00:00');
     $end_date = new DateTime('first day of this month 00:00');
 
+    if($check_date < $start_date || $end_date < $check_date) {
+        throw new Exception('日付の範囲が不正', 500);
+    }
     
-
-
     } else{
         $yyyymm = date('Y-m');
         $day_count = date('t');
     }
    
-    var_dump($day_count);
-    var_dump($yyyymm);
-    exit;
+    // var_dump($day_count);
+    // var_dump($yyyymm);
+    // exit;
 
     $sql = "SELECT date, id, start_time, end_time, break_time, comment FROM work WHERE user_id = :user_id AND DATE_FORMAT(date, '%Y-%m') = :date";
     $stmt = $pdo->prepare($sql);
@@ -160,7 +157,7 @@ try{
                 <option value = "<?= date('Y-m') ?>"><?= date('Y/m') ?></option>
                 <?php for ($i = 1; $i<12; $i++): ?>
                     <?php $target_yyyymm = strtotime("-{$i}months"); ?>
-                <option value = "<?= date('Y-m', $target_yyyymm) ?>"<?php if($yyyymm == date('Y-m', $target_yyyymm)) echo 'selected'?>><?= date('Y/m', $target_yyyymm) ?></option>  
+                    <option value = "<?= date('Y-m', $target_yyyymm) ?>"<?php if($yyyymm == date('Y-m', $target_yyyymm)) echo 'selected'?>><?= date('Y/m', $target_yyyymm) ?></option>  
                 <?php endfor; ?>  
             </select>
         </div>

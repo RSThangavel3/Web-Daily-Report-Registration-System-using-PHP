@@ -120,6 +120,22 @@ try {
     if(isset($_GET['m'])){
        $yyyymm = $_GET['m'];
        $day_count = date('t',strtotime($yyyymm));
+
+        if(count(explode('-',$yyyymm)) != 2) {
+            throw new Exception('日付の指定が不正', 500);
+        }
+
+        $check_date = new DateTime($yyyymm.'-01');
+        $start_date = new DateTime('first day of -11 month 00:00');
+        $end_date = new DateTime('first day of this month 00:00');
+
+        if($check_date < $start_date || $end_date < $check_date) {
+            throw new Exception('日付の範囲が不正', 500);
+        }
+
+        if($check_date != $end_date){
+            $modal_view_flg = FALSE;
+        }
     } else{
         $yyyymm = date('Y-m');
         $day_count = date('t');
