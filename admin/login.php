@@ -29,14 +29,13 @@ try{
     if(empty($err)){
     $pdo = connect_db();
 
-      $sql = "SELECT id, user_no, name, auth_type FROM user WHERE user_no = :user_no AND password = :password AND auth_type = 1 LIMIT 1";
+      $sql = "SELECT * FROM user WHERE user_no = :user_no AND auth_type = 1 LIMIT 1";
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':user_no',$user_no, PDO::PARAM_STR);
-      $stmt->bindValue(':password',$password, PDO::PARAM_STR);
       $stmt->execute();
       $user = $stmt->fetch();
 
-      if($user){
+      if($user && password_verify($password, $user['password'])){
         $_SESSION['USER'] = $user;
 
         header('Location:/admin/user_list.php');

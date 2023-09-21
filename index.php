@@ -13,15 +13,9 @@ try {
 
     $pdo = connect_db();
 
-    
     $modal_view_flg = TRUE;
     $arr = array();
     $target_date = date('Y-m-d');
-    // $target_date = '';
-    // $modal_start_time = '';
-    // $modal_break_time = '';
-    // $modal_end_time = '';
-    // $modal_comment = '';
 
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
@@ -31,14 +25,10 @@ try {
             $target_date = date('Y-m-d');
         }
         
-        // $target_date = $_POST['target_date'];
         $modal_start_time = $_POST['modal_start_time'];
         $modal_end_time = $_POST['modal_end_time'];
         $modal_break_time = $_POST['modal_break_time'];
         $modal_comment = $_POST['modal_comment'];
-        // var_dump($target_date);
-        // exit;
-        
         
         if(!$modal_start_time){
             $err['modal_start_time'] = '出勤時間を入力してください。';
@@ -140,8 +130,6 @@ try {
         $yyyymm = date('Y-m');
         $day_count = date('t');
     }
-   
-   
 
     $sql = "SELECT date, id, start_time, end_time, break_time, comment FROM work WHERE user_id = :user_id AND DATE_FORMAT(date, '%Y-%m') = :date";
     $stmt = $pdo->prepare($sql);
@@ -179,7 +167,7 @@ try {
         <h1 class="h3 my-3">月別リスト</h1>
         <select class="form-control rounded-pill mb-3" name="m" onchange="submit(this.form)">
             <option value = "<?= date('Y-m') ?>"><?= date('Y/m') ?></option>
-            <?php for ($i = 1; $i<12; $i++): ?>
+            <?php for ($i = 1; $i < 12; $i++): ?>
                 <?php $target_yyyymm = strtotime("-{$i}months"); ?>
             <option value = "<?= date('Y-m', $target_yyyymm) ?>"<?php if($yyyymm == date('Y-m', $target_yyyymm)) echo 'selected'?>><?= date('Y/m', $target_yyyymm) ?></option>  
             <?php endfor; ?>  
@@ -224,8 +212,6 @@ try {
                         }   
                     ?>    
                 <tr>
-                    
-                    
                     <th scope="row"><?= time_format_dw($yyyymm.'-'.$i) ?></th>
                     <td><?= $start_time ?></td>
                     <td><?= $end_time ?></td>
@@ -299,17 +285,12 @@ try {
         </div>
         <input type="hidden" id="target_date" name="target_date">
     </form>   
-
-    <!-- Optional JavaScript; choose one of the two! -->
-
-    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
         crossorigin="anonymous"></script>
-
     <script>
         <?php if($modal_view_flg):?>
             var inputModal = new bootstrap.Modal(document.getElementById('inputModal'));
@@ -357,11 +338,5 @@ try {
         })
         
     </script>
-    <!-- Option 2: jQuery, Popper.js, and Bootstrap JS
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
-        -->
 </body>
-
 </html>

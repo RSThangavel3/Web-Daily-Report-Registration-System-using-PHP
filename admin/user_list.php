@@ -67,7 +67,7 @@ try{
                 <?php foreach ($user_list as $user): ?>
                 <tr>
                     <td scope="row"><?= $user['user_no']?></td>
-                    <td><a href="/admin/user_result.php?m=<?= $yyyymm ?>&id=<?= $user['id']?>"><?= $user['name']?></a></td>
+                    <td><a href="/admin/user_result.php?m=<?= $yyyymm ?>&id=<?= $user['id']?>"><?= decryptWithFixedKey($user['name'])?></a></td>
                     <td scope="row"><?php if($user['auth_type']== 1) echo '管理者';?></td>
                 </tr>
                 <?php endforeach; ?>
