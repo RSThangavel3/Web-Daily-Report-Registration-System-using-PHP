@@ -108,7 +108,7 @@ try{
     if($check_date < $start_date || $end_date < $check_date) {
         throw new Exception('日付の範囲が不正', 500);
     }
-    
+
     } else{
         $yyyymm = date('Y-m');
         $day_count = date('t');
@@ -150,12 +150,12 @@ try{
     <div>
         <img class="mb-4" src="/img/logo.svg" alt="WoRKS" width="80" height="80">
     </div>
-    <form class="border rounded bg-white form-time-table" action="index.php">
+    <form class="border rounded bg-white form-time-table" action="user_result.php">
         <h1 class="h3 my-3">月別リスト</h1>
         <div  class="float-left">
             <select class="form-control rounded-pill mb-3" name="m" onchange="submit(this.form)">
                 <option value = "<?= date('Y-m') ?>"><?= date('Y/m') ?></option>
-                <?php for ($i = 1; $i<12; $i++): ?>
+                <?php for ($i = 1; $i < 12; $i++): ?>
                     <?php $target_yyyymm = strtotime("-{$i}months"); ?>
                     <option value = "<?= date('Y-m', $target_yyyymm) ?>"<?php if($yyyymm == date('Y-m', $target_yyyymm)) echo 'selected'?>><?= date('Y/m', $target_yyyymm) ?></option>  
                 <?php endfor; ?>  
@@ -200,6 +200,7 @@ try{
 
                             if($work['comment']){
                                 $comment =mb_strimwidth($work['comment'],0,40,'....');
+                                $comment_long = $work['comment'];
                             }
                         }   
                     ?>    
@@ -210,7 +211,8 @@ try{
                     <td><?= $start_time ?></td>
                     <td><?= $end_time ?></td>
                     <td><?= $break_time ?></td>
-                    <td><?= $comment ?></td>
+                    <td><?= h($comment) ?></td>
+                    <td class="d-none"><?= h($comment_long) ?></td>
                     <td><button type="button" class="btn btn-default h-auto py-0" data-toggle="modal" data-target="#inputModal" data-day="<?= $yyyymm.'-'.sprintf('%02d',$i) ?>"  ><svg xmlns="http://www.w3.org/2000/svg" height="1em"
                             viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                             <path
