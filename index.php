@@ -5,8 +5,7 @@ try {
     session_start();
 
     if (!isset($_SESSION['USER'])) {
-        header('Location: /login.php');
-        exit;
+        redirect('/login.php');
     }
 
     $session_user = $_SESSION['USER'];
@@ -32,17 +31,17 @@ try {
         
         if(!$modal_start_time){
             $err['modal_start_time'] = '出勤時間を入力してください。';
-        } elseif(!preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])$/', $modal_start_time)) {
+        } elseif(!check_time_format($modal_start_time)) {
             $modal_start_time = '';
             $err['modal_start_time'] = '出勤時間を正しく入力してください。';
         }
 
-        if(!preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])$/', $modal_end_time)) {
+        if(!check_time_format($modal_end_time)) {
             $modal_end_time = '';
             $err['modal_end_time'] = '退勤時間を正しく入力してください。';
         }
 
-        if(!preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])$/', $modal_break_time)) {
+        if(!check_time_format($modal_break_time)) {
             $modal_break_time = '';
             $err['modal_break_time'] = '休憩時間を正しく入力してください。';
         }
@@ -137,6 +136,9 @@ try {
     $stmt->bindValue(':date', $yyyymm, PDO::PARAM_STR);
     $stmt->execute();
     $work_list = $stmt->fetchAll(PDO::FETCH_UNIQUE);
+
+    $page_title = '日報登録';
+
 } catch(Exception $e){
     header('Location: /error.php');
     exit;
@@ -145,24 +147,12 @@ try {
 <!doctype html>
 <html lang="ja">
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
-
-    <!-- Original CSS-->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <title>日報登録｜WoRKS</title>
-</head>
+<?php include('templates/head_tag.php')?>
 
 <body class="text-center bg-light">
-    <div>
-        <img class="mb-4" src="img/logo.svg" alt="WoRKS" width="80" height="80">
-    </div>
+    
+    <?php include('templates/header.php')?>
+
     <form class="border rounded bg-white form-time-table" action="index.php">
         <h1 class="h3 my-3">月別リスト</h1>
         <select class="form-control rounded-pill mb-3" name="m" onchange="submit(this.form)">
