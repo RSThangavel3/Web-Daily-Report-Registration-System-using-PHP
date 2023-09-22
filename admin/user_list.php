@@ -1,32 +1,32 @@
-<?php 
-  require_once(dirname(__FILE__).'/../config/config.php');
-  require_once(dirname(__FILE__).'/../function.php');
-try{
+<?php
+require_once(dirname(__FILE__) . '/../config/config.php');
+require_once(dirname(__FILE__) . '/../function.php');
+try {
     session_start();
 
-    if(!isset($_SESSION['USER']) || $_SESSION['USER']['auth_type'] != 1){
+    if (!isset($_SESSION['USER']) || $_SESSION['USER']['auth_type'] != 1) {
         header('Location: /admin/login.php');
         exit;
     }
 
     $pdo = connect_db();
-    
+
     $sql = "SELECT * FROM user";
     $stmt = $pdo->query($sql);
     $user_list = $stmt->fetchAll();
 
 
-    if(isset($_GET['m'])){
+    if (isset($_GET['m'])) {
         $yyyymm = $_GET['m'];
-        $day_count = date('t',strtotime($yyyymm));
-     } else{
-         $yyyymm = date('Y-m');
-         $day_count = date('t');
-     }
-} catch(Exception $e){
+        $day_count = date('t', strtotime($yyyymm));
+    } else {
+        $yyyymm = date('Y-m');
+        $day_count = date('t');
+    }
+} catch (Exception $e) {
     header('Location: /error.php');
     exit;
-}     
+}
 ?>
 <!doctype html>
 <html lang="ja">
@@ -47,14 +47,10 @@ try{
 
 <body class="text-center bg-success">
     <div>
-        <img class="mb-4" src="/img/logo.svg" alt="WoRKS" width="80" height="80">
+    <a href="/admin/logout.php"> <img class="mb-4" src="/img/logo.svg" alt="WoRKS" width="80" height="80"></a>
     </div>
     <form class="border rounded bg-white form-user-list" action="index.php">
         <h1 class="h3 my-3">社員一覧</h1>
-        <select class="form-control rounded-pill mb-3" id="exampleFormControlSelect1">
-            <option>2020/11</option>
-        </select>
-
         <table class="table table-bordered">
             <thead>
                 <tr class="bg-light">
@@ -65,11 +61,18 @@ try{
             </thead>
             <tbody>
                 <?php foreach ($user_list as $user): ?>
-                <tr>
-                    <td scope="row"><?= $user['user_no']?></td>
-                    <td><a href="/admin/user_result.php?m=<?= $yyyymm ?>&id=<?= $user['id']?>"><?= decryptWithFixedKey($user['name'])?></a></td>
-                    <td scope="row"><?php if($user['auth_type']== 1) echo '管理者';?></td>
-                </tr>
+                    <tr>
+                        <td scope="row">
+                            <?= $user['user_no'] ?>
+                        </td>
+                        <td><a href="/admin/user_result.php?m=<?= $yyyymm ?>&id=<?= $user['id'] ?>">
+                                <?= decryptWithFixedKey($user['name']) ?>
+                            </a></td>
+                        <td scope="row">
+                            <?php if ($user['auth_type'] == 1)
+                                echo '管理者'; ?>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>

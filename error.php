@@ -23,10 +23,10 @@
   <div class="border rounded bg-white form-login">
     <h1 class="h3 my-3">ERROR</h1>
     <p>
-        システムエラーが発生しました。<br>お手数ですがシステム管理者にお問い合わせください。
-    </p>   
+      システムエラーが発生しました。<br>お手数ですがシステム管理者にお問い合わせください。
+    </p>
     <img class="my-3" src="/img/error.png" alt="ERROR" width="80" height="80">
-</div>
+  </div>
 
   <!-- Optional JavaScript; choose one of the two! -->
 
@@ -44,5 +44,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
     -->
 </body>
-
 </html>
