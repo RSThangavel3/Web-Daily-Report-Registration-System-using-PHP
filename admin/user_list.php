@@ -47,14 +47,10 @@ try {
 
 <body class="text-center bg-success">
     <div>
-        <img class="mb-4" src="/img/logo.svg" alt="WoRKS" width="80" height="80">
+    <a href="/admin/logout.php"> <img class="mb-4" src="/img/logo.svg" alt="WoRKS" width="80" height="80"></a>
     </div>
     <form class="border rounded bg-white form-user-list" action="index.php">
         <h1 class="h3 my-3">社員一覧</h1>
-        <select class="form-control rounded-pill mb-3" id="exampleFormControlSelect1">
-            <option>2020/11</option>
-        </select>
-
         <table class="table table-bordered">
             <thead>
                 <tr class="bg-light">

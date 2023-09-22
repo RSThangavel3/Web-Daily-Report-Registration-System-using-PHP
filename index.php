@@ -2,28 +2,26 @@
 require_once(dirname(__FILE__) . '/config/config.php');
 require_once(dirname(__FILE__) . '/function.php');
 try {
+    $target_date = '';
     session_start();
-
+    $err = array();
     if (!isset($_SESSION['USER'])) {
         redirect('/login.php');
     }
 
+    if(!$target_date){
+        $target_date = date('Y-m-d');
+    }
     $session_user = $_SESSION['USER'];
 
     $pdo = connect_db();
 
     $modal_view_flg = TRUE;
     $arr = array();
-    $target_date = date('Y-m-d');
-
+   
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        if ($_POST['target_date']) {
-            $target_date = $_POST['target_date'];
-        } else {
-            $target_date = date('Y-m-d');
-        }
-
+        $target_date = $_POST['target_date'];
         $modal_start_time = $_POST['modal_start_time'];
         $modal_end_time = $_POST['modal_end_time'];
         $modal_break_time = $_POST['modal_break_time'];
@@ -152,7 +150,7 @@ try {
 <body class="text-center bg-light">
 
     <?php include('templates/header.php') ?>
-
+    
     <form class="border rounded bg-white form-time-table" action="index.php">
         <h1 class="h3 my-3">月別リスト</h1>
         <select class="form-control rounded-pill mb-3" name="m" onchange="submit(this.form)">
@@ -167,7 +165,7 @@ try {
                 </option>
             <?php endfor; ?>
         </select>
-
+        
         <table class="table table-bordered">
             <thead>
                 <tr class="bg-light">
@@ -250,7 +248,7 @@ try {
                     <div class="modal-body">
                         <div class="container">
                             <div class="alert alert-primary" role="alert">
-                                <?= date('n', strtotime($target_date)) ?>/<span id="modal_day">
+                                <?= date('n', strtotime($yyyymm)) ?>/<span id="modal_day">
                                     <?= time_format_dw($target_date) ?>
                                 </span>
                             </div>
@@ -335,7 +333,6 @@ try {
             const hour = now.getHours().toString().padStart(2, '0');
             const minute = now.getMinutes().toString().padStart(2, '0');
             $('#modal_start_time').val(hour + ':' + minute);
-            $('#target_date').val('<?= date('Y-m-d') ?>');
         })
 
         $('#end_btn').click(function () {
@@ -343,7 +340,6 @@ try {
             const hour = now.getHours().toString().padStart(2, '0');
             const minute = now.getMinutes().toString().padStart(2, '0');
             $('#modal_end_time').val(hour + ':' + minute);
-            $('#target_date').val('<?= date('Y-m-d') ?>');
         })
 
         $('#inputModal').on('show.bs.modal', function (event) {
