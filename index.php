@@ -20,7 +20,7 @@ try {
     $arr = array();
    
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+        
         $target_date = $_POST['target_date'];
         $modal_start_time = $_POST['modal_start_time'];
         $modal_end_time = $_POST['modal_end_time'];
@@ -48,7 +48,6 @@ try {
             $modal_comment = '';
             $err['modal_comment'] = '業務内容が長すぎます。';
         }
-
         if (empty($err)) {
             $sql = "SELECT id FROM work WHERE user_id = :user_id AND date = :date LIMIT 1";
             $stmt = $pdo->prepare($sql);
@@ -107,7 +106,6 @@ try {
     if (isset($_GET['m'])) {
         $yyyymm = $_GET['m'];
         $day_count = date('t', strtotime($yyyymm));
-
         if (count(explode('-', $yyyymm)) != 2) {
             throw new Exception('日付の指定が不正', 500);
         }
@@ -120,9 +118,9 @@ try {
             throw new Exception('日付の範囲が不正', 500);
         }
 
-        if ($check_date != $end_date) {
-            $modal_view_flg = FALSE;
-        }
+        // if ($check_date != $end_date) {
+        //     $modal_view_flg = FALSE;
+        // }
     } else {
         $yyyymm = date('Y-m');
         $day_count = date('t');
@@ -249,7 +247,7 @@ try {
                         <div class="container">
                             <div class="alert alert-primary" role="alert">
                                 <?= date('n', strtotime($yyyymm)) ?>/<span id="modal_day">
-                                    <?= time_format_dw($target_date) ?>
+                                    <?= time_format_dw($target_date)?>
                                 </span>
                             </div>
                             <div class="row">
@@ -259,7 +257,7 @@ try {
                                             class="form-control <?php if (isset($err['modal_start_time']))
                                                 echo 'is-invalid'; ?>"
                                             placeholder="出勤" id="modal_start_time" name="modal_start_time"
-                                            value="<?= format_time($modal_start_time) ?>" required>
+                                            value="<?= format_time($modal_start_time) ?>">
                                         <div class="input-group-prepend">
                                             <button type="button" class="input-group-text" id="start_btn">打刻</button>
                                         </div>
@@ -314,7 +312,7 @@ try {
                 </div>
             </div>
         </div>
-        <input type="hidden" id="target_date" name="target_date">
+        <input type="hidden" id="target_date" name="target_date" value = "<?= $target_date ?>">
     </form>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -352,7 +350,7 @@ try {
             var break_time = button.closest('tr').children('td')[2].innerText
             var comment = button.closest('tr').children('td')[3].innerText
 
-            $('#modal_day').text(day)
+            $('#modal_day').text(day)            
             $('#modal_start_time').val(start_time)
             $('#modal_end_time').val(end_time)
             $('#modal_break_time').val(break_time)

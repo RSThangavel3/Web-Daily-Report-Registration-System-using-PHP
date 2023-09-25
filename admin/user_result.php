@@ -320,7 +320,7 @@ try {
                 </div>
             </div>
         </div>
-        <input type="hidden" id="target_date" name="target_date">
+        <input type="hidden" id="target_date" name="target_date" value = "<?= $target_date ?>">
     </form>
 
     <!-- Optional JavaScript; choose one of the two! -->
